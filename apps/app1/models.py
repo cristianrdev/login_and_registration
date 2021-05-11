@@ -22,15 +22,26 @@ class UserManager(models.Manager):
         if postData['passwordHTML'] != postData['password_confirmHTML']:
             errors['passwordHTML'] = "la contraseña no coincide con la de confirmación"
 
-        if  postData['birth_dateHTML'] > str(date.today()):
+        #valida que la fecha no esté en el futuro
+        date_today = date.today() #fecha hoy 
+        if  postData['birth_dateHTML'] > str(date_today):
             errors['birth_dateHTML'] = "La fecha no puede estar en el futuro"
+        else:
+            # valida la edad mayor a 13 años
+            birth_year = int(datetime.strptime(postData['birth_dateHTML'], '%Y-%m-%d').year) #año nacimieno
+            birth_month = int(datetime.strptime(postData['birth_dateHTML'], '%Y-%m-%d').month) #mes de nacimiento
+            birth_day = int(datetime.strptime(postData['birth_dateHTML'], '%Y-%m-%d').day) #día de nacimiento
+            birth_date_user = date(birth_year, birth_month, birth_day )
+            days_has_passed = (date_today-birth_date_user).days
+            if days_has_passed < (365.2425*13):
+                errors['birth_dateHTML'] = "Debe ser mayor de 13 años para ingresar"
 
-        # valida el email
+        # valida el formato del email
         EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
         if not EMAIL_REGEX.match(postData['emailHTML']):          
             errors['emailHTML'] = "Correo Invalido"
       
-        
+        # valida que el email no exista
         for s in User.objects.all():
             # se usa .lower() para ovbiar las mayúsculas en la comparación de palabras
             if postData['emailHTML'].lower() == s.email.lower(): 
