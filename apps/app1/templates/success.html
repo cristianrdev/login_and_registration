@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    <title>Bienvenido</title>
+</head>
+
+<body>
+    
+    {% if request.session.firstname %}
+    <div class="container row bg-light m-5 p-2">
+        <h2>Acceso concedido</h2>
+        <h3>Bienvenido, {{request.session.firstname}} {{request.session.lastname}}</h3>
+        <h4>Tu email es: {{request.session.email}}</h4>
+        <h4>Tu fecha de nacimiento es: {{request.session.birth_date}}</h4>
+    </div>
+    <a href="/logout">Cerrar Sesión</a>
+    {% else %}
+     <a href="/">Debe logearse para ingresar</a>
+    {% endif %}
+</body>
+
+</html>
